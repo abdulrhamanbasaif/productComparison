@@ -14,7 +14,7 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({
   onViewProduct,
-  onEditProduct,
+  onEditProduct,  
   onAddToCompare,
   compareList,
   viewMode,

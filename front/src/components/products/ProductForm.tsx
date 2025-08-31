@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, X } from 'lucide-react';
 import { Product } from '../../types';
+import { FilePond, registerPlugin } from "react-filepond";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import "filepond/dist/filepond.min.css";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+
+registerPlugin(FilePondPluginImagePreview, FilePondPluginImageExifOrientation);
 
 interface ProductFormProps {
   product?: Product;
@@ -15,7 +22,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
     price: 0,
     category: '',
     brand: '',
-    image: '',
+    image: '', // will store uploaded image path
     inStock: true,
     stockQuantity: 0,
     features: [] as string[],
@@ -25,6 +32,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
   const [newFeature, setNewFeature] = useState('');
   const [newSpecKey, setNewSpecKey] = useState('');
   const [newSpecValue, setNewSpecValue] = useState('');
+  const [files, setFiles] = useState<any[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (product) {
@@ -43,17 +52,24 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
     }
   }, [product]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      // delegate actual saving to parent/context
+      onSubmit(formData as any);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : 
-              type === 'number' ? parseFloat(value) || 0 : value
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked :
+        type === 'number' ? parseFloat(value) || 0 : value
     }));
   };
 
@@ -182,19 +198,40 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
         </div>
       </div>
 
+      {/* FilePond upload instead of Image URL */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Image URL *
+          Product Image *
         </label>
-        <input
-          type="url"
-          name="image"
-          required
-          value={formData.image}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="https://example.com/image.jpg"
+        <FilePond
+          files={files}
+          onupdatefiles={setFiles}
+          allowMultiple={false}
+          maxFiles={1}
+          server={{
+            url: "http://127.0.0.1:8000/api",
+            process: {
+              url: "/upload",
+              method: "POST",
+             
+              onload: (response) => {
+                const res = JSON.parse(response);
+                const imageUrl = res.full_url || (res.url ? `${window.location.origin}${res.url}` : res.path);
+                setFormData(prev => ({
+                  ...prev,
+                  image: imageUrl
+                }));
+                return imageUrl;
+              },
+              onerror: (err) => console.error("Upload error:", err),
+            },
+          }}
+          name="file"
+          labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
         />
+        {formData.image && (
+          <p className="text-sm text-gray-500 mt-2">Uploaded: {formData.image}</p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -329,7 +366,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          disabled={isSubmitting}
+          className={`px-4 py-2 text-white rounded-md transition-colors ${
+            isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+          }`}
         >
           {product ? 'Update Product' : 'Add Product'}
         </button>

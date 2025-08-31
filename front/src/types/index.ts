@@ -23,6 +23,7 @@ export interface Product {
 
 export interface AuthContextType {
   user: User | null;
+  token: string | null; // Add this line to include the token
   login: (email: string, password: string) => Promise<boolean>;
   register: (email: string, password: string, name: string) => Promise<boolean>;
   logout: () => void;
@@ -35,4 +36,5 @@ export interface ProductContextType {
   updateProduct: (id: string, product: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
   getProduct: (id: string) => Product | undefined;
+  loading: boolean;
 }
