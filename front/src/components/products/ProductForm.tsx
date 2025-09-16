@@ -6,6 +6,9 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import TextField from '@mui/material/TextField';
+import Chip from '@mui/material/Chip';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 registerPlugin(FilePondPluginImagePreview, FilePondPluginImageExifOrientation);
 
@@ -119,80 +122,72 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Product Name *
-          </label>
-          <input
-            type="text"
+          <TextField
+            label="Product Name"
             name="name"
             required
             value={formData.name}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            variant="standard"
+            fullWidth
             placeholder="Enter product name"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Price *
-          </label>
-          <input
-            type="number"
+          <TextField
+            label="Price"
             name="price"
             required
-            min="0"
-            step="0.01"
+            type="number"
             value={formData.price}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            variant="standard"
+            fullWidth
             placeholder="0.00"
+            inputProps={{ min: 0, step: 0.01 }}
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Description *
-        </label>
-        <textarea
+        <TextField
+          label="Description"
           name="description"
           required
+          multiline
           rows={3}
           value={formData.description}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          variant="standard"
+          fullWidth
           placeholder="Enter product description"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Category *
-          </label>
-          <input
-            type="text"
+          <TextField
+            label="Category"
             name="category"
             required
             value={formData.category}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            variant="standard"
+            fullWidth
             placeholder="e.g., Electronics, Clothing"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Brand *
-          </label>
-          <input
-            type="text"
+          <TextField
+            label="Brand"
             name="brand"
             required
             value={formData.brand}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            variant="standard"
+            fullWidth
             placeholder="Enter brand name"
           />
         </div>
@@ -201,7 +196,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
       {/* FilePond upload instead of Image URL */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Product Image *
+          Product Image 
         </label>
         <FilePond
           files={files}
@@ -249,16 +244,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Stock Quantity
-          </label>
-          <input
-            type="number"
+          <TextField
+            label="Stock Quantity"
             name="stockQuantity"
-            min="0"
+            type="number"
             value={formData.stockQuantity}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            variant="standard"
+            fullWidth
+            inputProps={{ min: 0 }}
           />
         </div>
       </div>
@@ -270,11 +264,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
         </label>
         <div className="space-y-2">
           <div className="flex space-x-2">
-            <input
-              type="text"
+            <TextField
+              label="Add a feature"
               value={newFeature}
               onChange={(e) => setNewFeature(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              variant="standard"
+              fullWidth
               placeholder="Add a feature"
             />
             <button
@@ -287,19 +282,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
           </div>
           <div className="flex flex-wrap gap-2">
             {formData.features.map((feature, index) => (
-              <span
+              <Chip
                 key={index}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
-              >
-                {feature}
-                <button
-                  type="button"
-                  onClick={() => removeFeature(index)}
-                  className="ml-2 text-blue-600 hover:text-blue-800"
-                >
-                  <X size={14} />
-                </button>
-              </span>
+                label={feature}
+                onDelete={() => removeFeature(index)}
+                color="primary"
+                 variant="outlined"
+              />
             ))}
           </div>
         </div>
@@ -312,18 +301,20 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
         </label>
         <div className="space-y-2">
           <div className="flex space-x-2">
-            <input
-              type="text"
+            <TextField
+              label="Specification name"
               value={newSpecKey}
               onChange={(e) => setNewSpecKey(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              variant="standard"
+              fullWidth
               placeholder="Specification name"
             />
-            <input
-              type="text"
+            <TextField
+              label="Specification value"
               value={newSpecValue}
               onChange={(e) => setNewSpecValue(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              variant="standard"
+              fullWidth
               placeholder="Specification value"
             />
             <button
@@ -336,21 +327,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
           </div>
           <div className="space-y-2">
             {Object.entries(formData.specifications).map(([key, value]) => (
-              <div
+              
+              <Chip
+              
                 key={key}
-                className="flex items-center justify-between p-2 bg-gray-50 rounded-md"
-              >
-                <span className="text-sm">
-                  <strong>{key}:</strong> {value}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => removeSpecification(key)}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <X size={16} />
-                </button>
-              </div>
+                label={`${key}: ${value}`}
+                onDelete={() => removeSpecification(key)}
+                color="primary"
+                variant="outlined"
+                  deleteIcon={<CancelIcon />}
+
+              />
             ))}
           </div>
         </div>

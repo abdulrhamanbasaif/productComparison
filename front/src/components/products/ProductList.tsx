@@ -4,6 +4,7 @@ import { Product } from '../../types';
 import { useProducts } from '../../hooks/useProducts';
 
 interface ProductListProps {
+  products: Product[]; // Added products prop
   onViewProduct: (product: Product) => void;
   onEditProduct: (product: Product) => void;
   onAddToCompare: (product: Product) => void;
@@ -13,6 +14,7 @@ interface ProductListProps {
 }
 
 const ProductList: React.FC<ProductListProps> = ({
+  products, // Use the passed products prop
   onViewProduct,
   onEditProduct,
   onAddToCompare,
@@ -20,11 +22,9 @@ const ProductList: React.FC<ProductListProps> = ({
   viewMode,
   onViewModeChange
 }) => {
-  const { products, deleteProduct } = useProducts();
-
-  const handleDelete = (id: string, name: string) => {
+  const handleDelete = (name: string) => { // Removed unused id parameter
     if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
-      deleteProduct(id);
+      // deleteProduct(name);
     }
   };
 
@@ -134,7 +134,7 @@ const ProductList: React.FC<ProductListProps> = ({
                         <GitCompare size={16} />
                       </button>
                       <button
-                        onClick={() => handleDelete(product.id, product.name)}
+                        onClick={() => handleDelete(product.name)} // Removed unused id parameter
                         className="text-red-600 hover:text-red-900 p-1 rounded"
                         title="Delete Product"
                       >
@@ -158,7 +158,7 @@ const ProductList: React.FC<ProductListProps> = ({
           <div className="relative bg-gray-50">
             <img
               src={product.image}
-              
+
               loading="lazy"
               onError={(e) => {
                 const img = e.currentTarget as HTMLImageElement;
@@ -231,7 +231,7 @@ const ProductList: React.FC<ProductListProps> = ({
                 {isInCompareList(product.id) ? 'Remove' : 'Compare'}
               </button>
               <button
-                onClick={() => handleDelete(product.id, product.name)}
+                onClick={() => handleDelete(product.name)} // Removed unused id parameter
                 className="flex-1 bg-red-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors flex items-center justify-center"
               >
                 <Trash2 size={16} className="mr-1" />

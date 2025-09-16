@@ -1,5 +1,6 @@
 import  { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import TextField from '@mui/material/TextField';
 
 export default function AmazonImport() {
   const [url, setUrl] = useState("");
@@ -167,12 +168,15 @@ export default function AmazonImport() {
       <h2 className="text-xl font-semibold">Import Amazon Product</h2>
 
       {/* URL Input */}
-      <input
+      <TextField
         type="url"
         placeholder="Paste Amazon product link here..."
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         className="w-full border rounded-lg p-2"
+        label="Amazon Product URL"
+        variant="standard"
+        fullWidth
       />
 
       {/* Fetch Button */}

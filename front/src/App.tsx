@@ -165,6 +165,7 @@ const MainApp: React.FC = () => {
               compareList={compareList}
               viewMode={viewMode}
               onViewModeChange={setViewMode}
+              products={filteredProducts as Product[]}
             />
           </div>
         );
@@ -223,6 +224,12 @@ const MainApp: React.FC = () => {
         return <HomePage onNavigateToProducts={() => setCurrentPage('products')} onNavigateToCompare={() => setCurrentPage('compare')} />;
     }
   };
+
+  console.log('Filtered Products:', filteredProducts); // Debugging filtered products
+  console.log('Search Term:', searchTerm); // Debugging search term
+  console.log('Selected Category:', selectedCategory); // Debugging selected category
+  console.log('Selected Brand:', selectedBrand); // Debugging selected brand
+  console.log('Price Range:', priceRange); // Debugging price range
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
