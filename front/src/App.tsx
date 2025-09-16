@@ -15,6 +15,7 @@ import SearchAndFilter from './components/search/SearchAndFilter';
 import AdminDashboard from './components/admin/AdminDashboard';
 import Modal from './components/common/Modal';
 import { useProducts } from './hooks/useProducts';
+import AmazonImport from './components/amzonproducts';
 // Import icon components
 import { Package, Grid3X3, List, GitCompare } from 'lucide-react';
 
@@ -26,24 +27,24 @@ const MainApp: React.FC = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [compareList, setCompareList] = useState<Product[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  
+
   // Search and filter states
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
-  
+
   const categories = Array.from(new Set(products.map(p => p.category))).filter(Boolean);
   const brands = Array.from(new Set(products.map(p => p.brand))).filter(Boolean);
-  
+
   // Filter products based on search and filters
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.description.toLowerCase().includes(searchTerm.toLowerCase());
+      product.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !selectedCategory || product.category === selectedCategory;
     const matchesBrand = !selectedBrand || product.brand === selectedBrand;
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
-    
+
     return matchesSearch && matchesCategory && matchesBrand && matchesPrice;
   });
 
@@ -72,6 +73,7 @@ const MainApp: React.FC = () => {
     });
   };
 
+
   const handleClearFilters = () => {
     setSearchTerm('');
     setSelectedCategory('');
@@ -88,7 +90,7 @@ const MainApp: React.FC = () => {
             onNavigateToCompare={() => setCurrentPage('compare')}
           />
         );
-      
+
       case 'products':
         if (selectedProduct) {
           return (
@@ -99,7 +101,7 @@ const MainApp: React.FC = () => {
             />
           );
         }
-        
+
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -107,15 +109,21 @@ const MainApp: React.FC = () => {
                 <h1 className="text-3xl font-bold text-gray-900">Products</h1>
                 <p className="text-gray-600">Manage your product catalog</p>
               </div>
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
-              >
-                <Package className="mr-2" size={20} />
-                Add Product
-              </button>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setShowAddForm(true)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                >
+                  <Package className="mr-2" size={20} />
+                  Add Product
+                </button>
+                <div className="sm-white shadow rounded-lg p-4">
+                  <AmazonImport />
+                </div>
+
+              </div>
             </div>
-            
+
             <SearchAndFilter
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
@@ -129,7 +137,7 @@ const MainApp: React.FC = () => {
               brands={brands}
               onClearFilters={handleClearFilters}
             />
-            
+
             <div className="flex items-center justify-between">
               <p className="text-gray-600">
                 Showing {filteredProducts.length} of {products.length} products
@@ -149,7 +157,7 @@ const MainApp: React.FC = () => {
                 </button>
               </div>
             </div>
-            
+
             <ProductList
               onViewProduct={setSelectedProduct}
               onEditProduct={setEditingProduct}
@@ -160,7 +168,7 @@ const MainApp: React.FC = () => {
             />
           </div>
         );
-      
+
       case 'compare':
         return (
           <div className="space-y-6">
@@ -168,7 +176,7 @@ const MainApp: React.FC = () => {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Product Comparison</h1>
               <p className="text-gray-600">Compare products side by side</p>
             </div>
-            
+
             {compareList.length === 0 ? (
               <div className="text-center py-12">
                 <GitCompare size={48} className="mx-auto text-gray-400 mb-4" />
@@ -201,7 +209,7 @@ const MainApp: React.FC = () => {
             )}
           </div>
         );
-      
+
       case 'admin':
         return (
           <AdminDashboard
@@ -210,7 +218,7 @@ const MainApp: React.FC = () => {
             onNavigateToCompare={() => setCurrentPage('compare')}
           />
         );
-      
+
       default:
         return <HomePage onNavigateToProducts={() => setCurrentPage('products')} onNavigateToCompare={() => setCurrentPage('compare')} />;
     }
@@ -219,15 +227,15 @@ const MainApp: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar currentPage={currentPage} onNavigate={setCurrentPage} />
-      
+
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {renderCurrentPage()}
         </div>
       </main>
-      
+
       <Footer />
-      
+
       {/* Modals */}
       <Modal
         isOpen={showAddForm}

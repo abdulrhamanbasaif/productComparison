@@ -36,9 +36,9 @@ const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
             <div className="p-3 bg-blue-600 rounded-xl">
               <ShoppingBag className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900">ProductHub</h2>
+            <h2 className="text-3xl font-bold text-gray-900">ProductCompare</h2>
           </div>
-          <p className="text-gray-600">Sign in to your admin account</p>
+         
         </div>
 
         <div className="bg-white py-8 px-6 shadow-xl rounded-lg">

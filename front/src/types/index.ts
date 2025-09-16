@@ -1,8 +1,8 @@
 export interface User {
-  id: string;
+  id: number;
   email: string;
   name: string;
-  role: 'admin' | 'user';
+  is_admin: boolean; // Add this property to represent admin status
 }
 
 export interface Product {
@@ -25,9 +25,10 @@ export interface AuthContextType {
   user: User | null;
   token: string | null; // Add this line to include the token
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, name: string) => Promise<boolean>;
+  register: (email: string, password: string, name: string , isAdmin: boolean) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
+
 }
 
 export interface ProductContextType {

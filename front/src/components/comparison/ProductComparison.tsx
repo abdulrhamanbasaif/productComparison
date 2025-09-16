@@ -2,6 +2,16 @@ import React from 'react';
 import { ArrowLeft, Check, X, Package, Star } from 'lucide-react';
 import { Product } from '../../types';
 
+// Normalize specification keys for fair comparison
+function normalizeSpecs(specs: Record<string, any>) {
+  const normalized: Record<string, any> = {};
+  for (const key in specs || {}) {
+    const normKey = key.trim().toLowerCase();
+    normalized[normKey] = specs[key];
+  }
+  return normalized;
+}
+
 interface ProductComparisonProps {
   products: Product[];
   onClose: () => void;
@@ -56,6 +66,10 @@ const ProductComparison: React.FC<ProductComparisonProps> = ({ products, onClose
     );
   };
 
+  
+  const specs1 = normalizeSpecs(product1.specifications || {});
+  const specs2 = normalizeSpecs(product2.specifications || {});
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -72,8 +86,9 @@ const ProductComparison: React.FC<ProductComparisonProps> = ({ products, onClose
       {/* Product Headers */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div></div>
-        {[product1, product2].map((product, index) => (
+        {[product1, product2].map((product) => (
           <div key={product.id} className="bg-white border border-gray-200 rounded-lg p-4">
+            
             <div className="text-center">
               <img
                 src={product.image}
@@ -110,7 +125,7 @@ const ProductComparison: React.FC<ProductComparisonProps> = ({ products, onClose
 
       {/* Features Comparison */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {[product1, product2].map((product, index) => (
+        {[product1, product2].map((product) => (
           <div key={product.id} className="bg-white border border-gray-200 rounded-lg p-6">
             <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
               <Star size={20} className="mr-2 text-yellow-500" />
@@ -140,16 +155,16 @@ const ProductComparison: React.FC<ProductComparisonProps> = ({ products, onClose
         </h4>
         
         <div className="space-y-0">
-          {/* Get all unique specification keys */}
+          {/* Get all unique normalized specification keys */}
           {Array.from(new Set([
-            ...Object.keys(product1.specifications),
-            ...Object.keys(product2.specifications)
+            ...Object.keys(specs1),
+            ...Object.keys(specs2)
           ])).map(specKey => (
             <ComparisonRow
               key={specKey}
               label={specKey}
-              value1={product1.specifications[specKey] || 'N/A'}
-              value2={product2.specifications[specKey] || 'N/A'}
+              value1={specs1[specKey] ?? 'N/A'}
+              value2={specs2[specKey] ?? 'N/A'}
             />
           ))}
         </div>
@@ -157,7 +172,7 @@ const ProductComparison: React.FC<ProductComparisonProps> = ({ products, onClose
 
       {/* Description Comparison */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {[product1, product2].map((product, index) => (
+        {[product1, product2].map((product) => (
           <div key={product.id} className="bg-white border border-gray-200 rounded-lg p-6">
             <h4 className="text-lg font-semibold text-gray-900 mb-3">
               Description - {product.name}

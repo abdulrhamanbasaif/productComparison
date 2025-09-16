@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (email: string, password: string, name: string): Promise<boolean> => {
+  const register = async (email: string, password: string, name: string, isAdmin: boolean): Promise<boolean> => {
     setIsLoading(true);
     try {
       await getCsrfCookie();
@@ -76,6 +76,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           email,
           password,
           password_confirmation: password,
+          isAdmin: isAdmin,
         }),
       });
 

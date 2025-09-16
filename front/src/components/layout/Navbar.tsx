@@ -16,7 +16,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
     { id: 'home', label: 'Home', icon: Home },
     { id: 'products', label: 'Products', icon: Package },
     { id: 'compare', label: 'Compare', icon: GitCompare },
-    { id: 'admin', label: 'Admin', icon: Settings }
+    // Only show the admin item if the user is an admin
+    ...(user?.is_admin ? [{ id: 'admin', label: 'Admin', icon: Settings }] : [])
   ];
 
   return (
@@ -28,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
             <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg">
               <Package className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-xl font-bold text-gray-900">ProductHub</h1>
+            <h1 className="text-xl font-bold text-gray-900">ProductCompare</h1>
           </div>
 
           {/* Desktop Navigation */}

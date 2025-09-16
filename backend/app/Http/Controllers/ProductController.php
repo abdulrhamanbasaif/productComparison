@@ -12,10 +12,14 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $products = Product::where('user_id', auth()->id())->get();
-        return response()->json($products);
-    }
+{
+    $products = auth()->user()->is_admin
+        ? Product::all()
+        : Product::where('user_id', auth()->id())->get();
+
+    return response()->json($products);
+}
+
 
 
 
@@ -27,14 +31,14 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'category' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
-            'image' => 'required|string',
+            'image' => 'nullable|string',
             'inStock' => 'boolean',
             'stockQuantity' => 'integer|min:0',
             'features' => 'sometimes|array',
             'specifications' => 'sometimes|array',
         ]);
 
-       
+
 
         $validatedData['user_id'] = auth()->id(); // link to user
 
@@ -49,7 +53,8 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        if ($product->user_id !== auth()->id()) {
+
+        if ($product->user_id !== auth()->id() && !auth()->user()->is_admin) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -58,7 +63,7 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        if ($product->user_id !== auth()->id()) {
+        if ($product->user_id !== auth()->id() && !auth()->user()->is_admin) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -68,7 +73,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'category' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
-            'image' => 'required|string',
+            'image' => 'nullable|string',
             'inStock' => 'boolean',
             'stockQuantity' => 'integer|min:0',
             'features' => 'sometimes|array',
@@ -82,8 +87,31 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        if ($product->user_id !== auth()->id()) {
+        if ($product->user_id !== auth()->id() && !auth()->user()->is_admin) {
             return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // Attempt to delete the product image from storage if it exists
+        if (!empty($product->image)) {
+            $path = $product->image;
+
+            // If a full URL was stored, extract the path portion
+            if (preg_match('/^https?:\/\//i', $path)) {
+                $parsed = parse_url($path, PHP_URL_PATH);
+                if (is_string($parsed)) {
+                    $path = ltrim($parsed, '/');
+                }
+            }
+
+            // Normalize: convert "/storage/products/..." to "products/..."
+            if (strpos($path, 'storage/') === 0) {
+                $path = substr($path, strlen('storage/'));
+            }
+
+            // Only delete files from the public disk within the products/ directory
+            if ($path && strpos($path, 'products/') === 0) {
+                Storage::disk('public')->delete($path);
+            }
         }
 
         $product->delete();
@@ -98,20 +126,20 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
-public function upload(Request $request)
-{
-    $request->validate([
-        'file' => 'required|image|max:2048',
-    ]);
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|max:2048',
+        ]);
 
-    $path = $request->file('file')->store('products', 'public');
+        $path = $request->file('file')->store('products', 'public');
 
-    return response()->json([
-        'path' => $path,
-        'url'  => Storage::url($path), // e.g. /storage/products/xxx.jpg
-        'full_url' => url(Storage::url($path)), // absolute URL
-    ], 201);
-}
-    
+        return response()->json([
+            'path' => $path,
+            'url' => Storage::url($path), // e.g. /storage/products/xxx.jpg
+            'full_url' => url(Storage::url($path)), // absolute URL
+        ], 201);
+    }
+
 
 }

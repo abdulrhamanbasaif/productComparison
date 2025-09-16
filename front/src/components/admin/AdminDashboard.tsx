@@ -1,6 +1,11 @@
 import React from 'react';
 import { Package, GitCompare, TrendingUp, Users, DollarSign, ShoppingCart } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
+import {useAuth} from '../../hooks/useAuth';
+import { Navigate } from 'react-router-dom';
+
+
+
 
 interface AdminDashboardProps {
   compareCount: number;
@@ -13,17 +18,21 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onNavigateToProducts, 
   onNavigateToCompare 
 }) => {
+  const { user } = useAuth(); // Get the logged-in user
+
+  // Redirect if the user is not an admin
+  if (!user || !user.is_admin) {
+    return <Navigate to="/" replace />;
+  }
+
   const { products } = useProducts();
 
   const stats = {
     totalProducts: products.length,
-    inStockProducts: products.filter(p => p.inStock).length,
-    outOfStockProducts: products.filter(p => !p.inStock).length,
-    totalValue: products.reduce((sum, p) => sum + (p.price * p.stockQuantity), 0),
-    averagePrice: products.length > 0 ? products.reduce((sum, p) => sum + p.price, 0) / products.length : 0,
     comparisons: compareCount
   };
 
+  
   const categories = products.reduce((acc, product) => {
     acc[product.category] = (acc[product.category] || 0) + 1;
     return acc;
@@ -73,30 +82,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           icon={<Package className="h-6 w-6 text-white" />}
           color="bg-blue-500"
           onClick={onNavigateToProducts}
-        />
-        <StatCard
-          title="In Stock"
-          value={stats.inStockProducts}
-          icon={<TrendingUp className="h-6 w-6 text-white" />}
-          color="bg-green-500"
-        />
-        <StatCard
-          title="Out of Stock"
-          value={stats.outOfStockProducts}
-          icon={<ShoppingCart className="h-6 w-6 text-white" />}
-          color="bg-red-500"
-        />
-        <StatCard
-          title="Total Inventory Value"
-          value={`$${stats.totalValue.toLocaleString()}`}
-          icon={<DollarSign className="h-6 w-6 text-white" />}
-          color="bg-purple-500"
-        />
-        <StatCard
-          title="Average Price"
-          value={`$${stats.averagePrice.toFixed(2)}`}
-          icon={<TrendingUp className="h-6 w-6 text-white" />}
-          color="bg-indigo-500"
         />
         <StatCard
           title="Comparisons Made"
@@ -179,12 +164,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Price
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Stock
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Created
-                  </th>
+                  
+                  
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -210,16 +191,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       ${product.price}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                        product.inStock 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {product.inStock ? `${product.stockQuantity} in stock` : 'Out of stock'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(product.createdAt).toLocaleDateString()}
                     </td>
                   </tr>
                 ))}

@@ -33,7 +33,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigateToProducts, onNavigateToC
       <div className="text-center py-16 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl">
         <div className="max-w-4xl mx-auto px-6">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            Welcome to <span className="text-blue-600">ProductHub</span>
+            Welcome to <span className="text-blue-600">ProductCompare</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             Your comprehensive product management solution. Organize, compare, and discover products with ease.
@@ -88,7 +88,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigateToProducts, onNavigateToC
       {/* Features Section */}
       <div>
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose ProductHub?</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose ProductCompare?</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Powerful features designed to streamline your product management workflow
           </p>
@@ -168,7 +168,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigateToProducts, onNavigateToC
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-12 text-center text-white">
         <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
         <p className="text-xl mb-8 opacity-90">
-          Join thousands of businesses already using ProductHub to manage their products efficiently.
+          Join thousands of businesses already using ProductCompare to manage their products efficiently.
         </p>
         <button
           onClick={onNavigateToProducts}

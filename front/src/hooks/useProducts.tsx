@@ -26,7 +26,7 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const res = await fetch('http://localhost:8000/api/products', {
+  const res = await fetch('http://127.0.0.1:8000/api/products', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -49,12 +49,12 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
 
   const addProduct = async (productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
-      const res = await fetch('http://localhost:8000/api/products', {
+  const res = await fetch('http://127.0.0.1:8000/api/products', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`, // 👈
+          'Authorization': `Bearer ${token}`, 
         },
         body: JSON.stringify(productData),
       });
@@ -69,12 +69,12 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
 
   const updateProduct = async (id: string, productData: Partial<Product>) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/products/${id}`, {
+  const res = await fetch(`http://127.0.0.1:8000/api/products/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`, // 👈
+          'Authorization': `Bearer ${token}`, 
         },
         body: JSON.stringify(productData),
       });
@@ -89,10 +89,10 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
 
   const deleteProduct = async (id: string) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/products/${id}`, {
+  const res = await fetch(`http://127.0.0.1:8000/api/products/${id}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`, // 👈
+          'Authorization': `Bearer ${token}`, 
         },
       });
 

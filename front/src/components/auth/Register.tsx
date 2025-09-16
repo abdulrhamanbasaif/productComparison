@@ -11,7 +11,8 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    isAdmin: false // Add isAdmin field
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -37,16 +38,17 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
       return;
     }
 
-    const success = await register(formData.email, formData.password, formData.name);
+    const success = await register(formData.email, formData.password, formData.name, formData.isAdmin); // Pass isAdmin to register function
     if (!success) {
       setError('Registration failed. Please try again.');
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: type === 'checkbox' ? checked : value // Handle checkbox
     }));
   };
 
@@ -58,7 +60,7 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
             <div className="p-3 bg-blue-600 rounded-xl">
               <ShoppingBag className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900">ProductHub</h2>
+            <h2 className="text-3xl font-bold text-gray-900">ProductCompare</h2>
           </div>
           <p className="text-gray-600">Create your admin account</p>
         </div>
@@ -159,6 +161,20 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
                   )}
                 </button>
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="isAdmin" className="flex items-center space-x-2">
+                <input
+                  id="isAdmin"
+                  name="isAdmin"
+                  type="checkbox"
+                  checked={formData.isAdmin}
+                  onChange={handleChange}
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">Register as admin</span>
+              </label>
             </div>
 
             <div>

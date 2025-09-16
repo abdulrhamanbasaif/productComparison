@@ -14,7 +14,7 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({
   onViewProduct,
-  onEditProduct,  
+  onEditProduct,
   onAddToCompare,
   compareList,
   viewMode,
@@ -97,11 +97,10 @@ const ProductList: React.FC<ProductListProps> = ({
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                      product.inStock 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${product.inStock
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                      }`}>
                       {product.inStock ? `${product.stockQuantity} in stock` : 'Out of stock'}
                     </span>
                   </td>
@@ -124,13 +123,12 @@ const ProductList: React.FC<ProductListProps> = ({
                       <button
                         onClick={() => onAddToCompare(product)}
                         disabled={!canAddToCompare(product.id)}
-                        className={`p-1 rounded ${
-                          isInCompareList(product.id)
-                            ? 'text-purple-600 bg-purple-100'
-                            : canAddToCompare(product.id)
+                        className={`p-1 rounded ${isInCompareList(product.id)
+                          ? 'text-purple-600 bg-purple-100'
+                          : canAddToCompare(product.id)
                             ? 'text-purple-600 hover:text-purple-900'
                             : 'text-gray-400 cursor-not-allowed'
-                        }`}
+                          }`}
                         title={isInCompareList(product.id) ? 'Remove from Compare' : 'Add to Compare'}
                       >
                         <GitCompare size={16} />
@@ -157,16 +155,21 @@ const ProductList: React.FC<ProductListProps> = ({
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.map((product) => (
         <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-          <div className="relative">
+          <div className="relative bg-gray-50">
             <img
               src={product.image}
-              alt={product.name}
-              className="w-full h-48 object-cover"
+              
+              loading="lazy"
+              onError={(e) => {
+                const img = e.currentTarget as HTMLImageElement;
+                img.onerror = null;
+                img.src = 'https://via.placeholder.com/800x600?text=No+Image';
+              }}
+              className="w-full h-48 object-contain p-2"
             />
             <div className="absolute top-2 right-2">
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              }`}>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                }`}>
                 {product.inStock ? 'In Stock' : 'Out of Stock'}
               </span>
             </div>
@@ -178,15 +181,15 @@ const ProductList: React.FC<ProductListProps> = ({
               </div>
             )}
           </div>
-          
+
           <div className="p-4">
             <div className="flex items-start justify-between mb-2">
-              <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">{product.name}</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2">{product.name}</h3>
               <span className="text-xl font-bold text-blue-600">${product.price}</span>
             </div>
-            
-            <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
-            
+
+            <p className="text-gray-600 text-sm mb-3 line-clamp-3">{product.description}</p>
+
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm text-gray-500">{product.brand}</span>
               <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
@@ -194,22 +197,8 @@ const ProductList: React.FC<ProductListProps> = ({
               </span>
             </div>
 
-            {/* Features Preview */}
-            {product.features.length > 0 && (
-              <div className="mb-3">
-                <div className="flex flex-wrap gap-1">
-                  {product.features.slice(0, 2).map((feature, index) => (
-                    <span key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                      {feature}
-                    </span>
-                  ))}
-                  {product.features.length > 2 && (
-                    <span className="text-xs text-gray-500">+{product.features.length - 2} more</span>
-                  )}
-                </div>
-              </div>
-            )}
-            
+
+
             <div className="flex space-x-2">
               <button
                 onClick={() => onViewProduct(product)}
@@ -231,13 +220,12 @@ const ProductList: React.FC<ProductListProps> = ({
               <button
                 onClick={() => onAddToCompare(product)}
                 disabled={!canAddToCompare(product.id)}
-                className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center justify-center ${
-                  isInCompareList(product.id)
-                    ? 'bg-purple-600 text-white hover:bg-purple-700'
-                    : canAddToCompare(product.id)
+                className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center justify-center ${isInCompareList(product.id)
+                  ? 'bg-purple-600 text-white hover:bg-purple-700'
+                  : canAddToCompare(product.id)
                     ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                }`}
+                  }`}
               >
                 <GitCompare size={16} className="mr-1" />
                 {isInCompareList(product.id) ? 'Remove' : 'Compare'}

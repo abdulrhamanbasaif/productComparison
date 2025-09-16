@@ -22,7 +22,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
     price: 0,
     category: '',
     brand: '',
-    image: '', // will store uploaded image path
+    image: '',
     inStock: true,
     stockQuantity: 0,
     features: [] as string[],

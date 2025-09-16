@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
               <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg">
                 <Package className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold">ProductHub</h3>
+              <h3 className="text-xl font-bold">ProductCompare</h3>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
               Your comprehensive product management solution. Compare, manage, and discover products with ease.
@@ -57,10 +57,10 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © {currentYear} ProductHub. All rights reserved.
+            © {currentYear} ProductCompare. All rights reserved.
           </p>
           <p className="text-gray-400 text-sm flex items-center mt-2 md:mt-0">
-            Made with <Heart size={16} className="mx-1 text-red-500" /> by ProductHub Team
+            Made with <Heart size={16} className="mx-1 text-red-500" /> by ProductCompare Team
           </p>
         </div>
       </div>
