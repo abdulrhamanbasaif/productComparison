@@ -196,7 +196,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
       {/* FilePond upload instead of Image URL */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Product Image 
+          Product Image
         </label>
         <FilePond
           files={files}
@@ -208,7 +208,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
             process: {
               url: "/upload",
               method: "POST",
-             
+
               onload: (response) => {
                 const res = JSON.parse(response);
                 const imageUrl = res.full_url || (res.url ? `${window.location.origin}${res.url}` : res.path);
@@ -287,7 +287,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
                 label={feature}
                 onDelete={() => removeFeature(index)}
                 color="primary"
-                 variant="outlined"
+                variant="outlined"
               />
             ))}
           </div>
@@ -327,15 +327,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
           </div>
           <div className="space-y-2">
             {Object.entries(formData.specifications).map(([key, value]) => (
-              
+
               <Chip
-              
+
                 key={key}
                 label={`${key}: ${value}`}
                 onDelete={() => removeSpecification(key)}
                 color="primary"
                 variant="outlined"
-                  deleteIcon={<CancelIcon />}
+                deleteIcon={<CancelIcon />}
 
               />
             ))}
@@ -354,9 +354,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`px-4 py-2 text-white rounded-md transition-colors ${
-            isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+          className={`px-4 py-2 text-white rounded-md transition-colors ${isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+            }`}
         >
           {product ? 'Update Product' : 'Add Product'}
         </button>

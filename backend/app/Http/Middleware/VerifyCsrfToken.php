@@ -16,5 +16,6 @@ class VerifyCsrfToken extends Middleware
         'login',
         'logout',
         'register',
+        'livewire/*',
     ];
 }

@@ -17,7 +17,6 @@ class AdminMiddleware
 
     public function handle(Request $request, Closure $next): Response
     {
-        \Log::info('AdminMiddleware invoked'); // Debug statement
 
         if (Auth::check() && Auth::user()->is_admin) {
             return $next($request);
