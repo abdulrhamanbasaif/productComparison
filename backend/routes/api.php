@@ -11,6 +11,7 @@ use App\Http\Controllers\AmazonController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('products', ProductController::class);
     Route::post('/products/compare', [ProductController::class, 'compare']);
+    Route::post('/products/bulk-update', [ProductController::class, 'bulkUpdate']);
     
 
     Route::post('/logout', [UserController::class, 'logout']);

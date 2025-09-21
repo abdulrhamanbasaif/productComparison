@@ -13,11 +13,12 @@ import ProductDetails from './components/products/ProductDetails';
 import ProductComparison from './components/comparison/ProductComparison';
 import SearchAndFilter from './components/search/SearchAndFilter';
 import AdminDashboard from './components/admin/AdminDashboard';
+import BulkDiscountForm from './components/products/BulkDiscountForm';
 import Modal from './components/common/Modal';
 import { useProducts } from './hooks/useProducts';
 import AmazonImport from './components/amzonproducts';
 // Import icon components
-import { Package, Grid3X3, List, GitCompare } from 'lucide-react';
+import { Package, Grid3X3, List, GitCompare, Percent } from 'lucide-react';
 
 const MainApp: React.FC = () => {
   const { products, addProduct, updateProduct } = useProducts();
@@ -101,6 +102,13 @@ const MainApp: React.FC = () => {
             />
           );
         }
+
+      case 'bulk-discount':
+        return (
+          <BulkDiscountForm
+            onBack={() => setCurrentPage('home')}
+          />
+        );
 
         return (
           <div className="space-y-6">

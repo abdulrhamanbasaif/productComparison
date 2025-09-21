@@ -126,6 +126,42 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    public function bulkUpdate(Request $request)
+    {
+        $request->validate([
+            'products' => 'required|array',
+            'products.*.id' => 'required|exists:products,id',
+            'products.*.salla_id' => 'nullable|string',
+            'products.*.price' => 'required|numeric|min:0',
+            'products.*.regular_price' => 'required|numeric|min:0',
+            'products.*.sale_price' => 'required|numeric|min:0',
+        ]);
+
+        $updatedProducts = [];
+        
+        foreach ($request->products as $productData) {
+            $product = Product::find($productData['id']);
+            
+            // Check authorization
+            if ($product->user_id !== auth()->id() && !auth()->user()->is_admin) {
+                continue; // Skip unauthorized products
+            }
+
+            $product->update([
+                'price' => $productData['sale_price'], // Use sale_price as the new price
+                // Note: We're storing sale_price in the price field since our current schema doesn't have separate regular_price/sale_price columns
+            ]);
+
+            $updatedProducts[] = $product;
+        }
+
+        return response()->json([
+            'message' => 'Products updated successfully',
+            'updated_count' => count($updatedProducts),
+            'products' => $updatedProducts
+        ]);
+    }
+
     public function upload(Request $request)
     {
         $request->validate([

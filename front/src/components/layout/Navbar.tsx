@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, Package, GitCompare, Settings, User, LogOut, Menu, X } from 'lucide-react';
+import { Home, Package, GitCompare, Settings, User, LogOut, Menu, X, Percent } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 interface NavbarProps {
@@ -16,6 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
     { id: 'home', label: 'Home', icon: Home },
     { id: 'products', label: 'Products', icon: Package },
     { id: 'compare', label: 'Compare', icon: GitCompare },
+    { id: 'bulk-discount', label: 'Bulk Discount', icon: Percent },
     // Only show the admin item if the user is an admin
     ...(user?.is_admin ? [{ id: 'admin', label: 'Admin', icon: Settings }] : [])
   ];
